@@ -13,7 +13,9 @@ class _TodoLoginState extends State<TodoLogin> {
   TextEditingController t1 = TextEditingController();
   TextEditingController t2 = TextEditingController();
   TextEditingController t3 = TextEditingController();
+
   bool _flag = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,35 +28,58 @@ class _TodoLoginState extends State<TodoLogin> {
               flex: 5,
             ),
             TextFormField(
+              autofocus: true,
               controller: t1,
-              decoration: newMethod("Name"),
+              decoration: newMethod(
+                  Icon(
+                    Icons.person,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  "Name"),
             ),
             const Spacer(
               flex: 1,
             ),
-            TextFormField(controller: t2, decoration: newMethod("Email")),
+            TextFormField(
+                controller: t2,
+                decoration: newMethod(
+                    Icon(
+                      Icons.email,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    "Email")),
             const Spacer(
               flex: 1,
             ),
             TextFormField(
               controller: t3,
-              decoration: newMethod("Password"),
+              decoration: newMethod(
+                  Icon(
+                    Icons.lock,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  "Password"),
             ),
             const Spacer(
               flex: 1,
             ),
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    primary: Colors.orange,
-                    onPrimary: Colors.green,
-                    shape: const StadiumBorder()),
-                onPressed: () async {
-                  await api.todoRegister(t1.text, t2.text, t3.text);
-                  setState(() {
-                    _flag = !_flag;
-                  });
-                },
-                child: const Text("Register")),
+            Container(
+              width: MediaQuery.of(context).size.height * 0.8,
+              decoration: BoxDecoration(
+                  color: Colors.orange,
+                  borderRadius: BorderRadius.circular(12)),
+              child: TextButton(
+                  onPressed: () {
+                    //   await api.todoRegister(t1.text, t2.text, t3.text);
+                    setState(() {
+                      _flag = !_flag;
+                    });
+                  },
+                  child: const Text(
+                    "Register",
+                    style: TextStyle(color: Colors.white),
+                  )),
+            ),
             const Spacer(
               flex: 5,
             ),
@@ -64,12 +89,24 @@ class _TodoLoginState extends State<TodoLogin> {
     );
   }
 
-  InputDecoration newMethod(String hint) {
+  InputDecoration newMethod(Widget icon, String label) {
     return InputDecoration(
-      hintText: hint,
+      prefixIcon: icon,
+      labelText: label,
+      focusColor: Colors.orange,
+      fillColor: Colors.orange,
       enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Colors.black)),
+          borderSide: const BorderSide(color: Colors.black26)),
+      focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black26)),
+      errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black26)),
+      disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(color: Colors.black26)),
     );
   }
 }
