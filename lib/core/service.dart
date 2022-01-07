@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:todo_app/core/model/get_all_photos_model.dart';
+import 'package:todo_app/core/model/image.dart';
 import 'package:todo_app/core/model/toddo_register.dart';
 
 import 'model/covid_model.dart';
@@ -11,6 +13,7 @@ import 'model/students.dart';
 import 'model/token_model.dart';
 
 class Service {
+  final photoUrl = "http://10.0.2.2:3000/users/photos";
   final url = "http://10.0.2.2:3000/post";
   final todoRegisterUrl = "http://10.0.2.2:3000/users/signup";
   final todoLoginUrl = "http://10.0.2.2:3000/users/login";
@@ -107,6 +110,46 @@ class Service {
       return result;
     } else {
       throw ("Can't get the Articles");
+    }
+  }
+
+  Future uploadImage(String image) async {
+    Response res = await http.post(Uri.parse(photoUrl), body: {'photo': image});
+
+    if (res.statusCode == 201) {
+      print(res.body);
+      return "ok";
+    } else {
+      throw ("Can't post the Image");
+    }
+  }
+
+  //
+  Future<bool> addImage(String filepath) async {
+    String addimageUrl = 'http://10.0.2.2:3000/users/photos';
+    Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+    var request = http.MultipartRequest('POST', Uri.parse(addimageUrl))
+      ..headers.addAll(headers)
+      ..files.add(await http.MultipartFile.fromPath('image', filepath));
+    var response = await request.send();
+    if (response.statusCode == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<GetAllPhotos> getAllPhotos() async {
+    Response res = await http.get(Uri.parse(photoUrl));
+
+    if (res.statusCode == 200) {
+      print(res.body);
+
+      return getAllPhotosFromJson(res.body);
+    } else {
+      throw "Something went wrong";
     }
   }
 }
